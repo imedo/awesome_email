@@ -1,3 +1,48 @@
-AwesomeEmail
-============
+=== AwesomeEmail
 
+AwesomeEmail enables you to send multipart mails which utilize layouts and inlined styles.
+Also german umlauts will be replaced by html enities if you send html mails.
+
+=== Usage
+
+In your delivery methods you can use
+
+  layout    "template_filename"
+  css       "css_filename"
+  
+to define which layout should be used and which css file should be used to create inline styles
+
+== Layout
+
+Layouts in emails are not a problem anymore and are uses like normal Rails layout files.
+The only limit is, that the layout file must be located in app/views/layouts/{mailername}
+
+== CSS inlining
+
+The cumulated style of each DOM element will be set as an style attribute when using css inlining.
+
+Example:
+  <style> 
+    #some-id { font-size:2em; }
+    .some-class { color:red; }
+  </style>
+  
+  <p id="some-id" class="some-class">Hello World!</p>
+  
+will result in the following code:
+  
+  <p id="some-id" class="some-class" style="color:red; font-size:2em;">Hello World!</p>
+
+=== Dependencies
+
+gems: rails 2.0.2, hpricot, csspool
+
+=== ToDo
+
+Tests, more Documentation
+
+=== Installation
+
+Put it in your vendor/plugins folder
+
+Copyright (c) 2008 imedo GmbH, released under the MIT license
