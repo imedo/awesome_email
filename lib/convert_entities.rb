@@ -12,9 +12,15 @@ module ActionMailer
         text.gsub(/[#{UMLAUTS.keys.join}]/) { |match| UMLAUTS[match] }
       end
       
+      # convert entities only when rendering html
       def render_message_with_converted_entities(method_name, body)
         message = render_message_without_converted_entities(method_name, body)
-        message =~ /<html/ ? convert_to_entities(message) : message
+        html_part?(method_name) ? convert_to_entities(message) : message
+      end
+      
+      # check if the we are colling
+      def html_part?(method_name)
+        method_name.gsub(".", "/") =~ /#{Mime::EXTENSION_LOOKUP['html']}/ 
       end
     end
     

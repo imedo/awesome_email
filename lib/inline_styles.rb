@@ -10,6 +10,8 @@ module ActionMailer
     end
     
     module InstanceMethods
+      
+      # parse the html and add inline styling
       def inline(html, css)
         sac = CSS::SAC::Parser.new 
         css_doc = sac.parse(File.read("#{RAILS_ROOT}/public/stylesheets/mails/#{css}.css"))
