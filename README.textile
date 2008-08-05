@@ -1,0 +1,80 @@
+h2. For the impatient
+
+Check out the demo application: 
+*<code>http://opensource.imedo.de/htmlmail</code>*
+
+Install the plugin: 
+*<code>script/plugin install git://github.com/imedo/awesome_email.git</code>*
+
+Learn how to use it below.
+
+h2. Introduction
+
+Have you ever tried sending HTML emails to your users? If you did, you know for sure that it sucks big time: none of the usual ActionView helpers want to work, URL routing is disabled, layouts don't work, and last but not least, the CSS you wrote for your email "simply won't work in any e-mail client":http://www.sitepoint.com/blogs/2007/01/10/microsoft-breaks-html-email-rendering-in-outlook except maybe Apple Mail. To solve all of the above problems, the <code>awesome_email</code> plugin comes to the rescue. Just install it into your <code>vendor/plugins</code> folder, and the rest comes by itself.
+If you are interested in what works in which Email client check this link: "A guide to css support in Email":http://www.campaignmonitor.com/css/
+
+h2. What does it do?
+
+There are a few interesting components in <code>awesome_email</code>:
+
+* awesome_email adds layout support to emails. That means that you can use templates for e-mails just like you would with normal Rails Views.
+* The HTML Mail's CSS is automatcally inlined. That means that your designer and/or CSS guy can design the email in a web browser without worrying about how it might look like in excotic email clients. Yes, it works in Outlook, too, and no, it "doesn't work in Outlook 2007 without tweaking":http://www.sitepoint.com/blogs/2007/01/10/microsoft-breaks-html-email-rendering-in-outlook. The reason is a "stupid decision from Microsoft about Outlook 2007", but we're working on that one.
+* ConvertEntities replaces Umlauts and other crazy symbols like &auml;, &Ouml; etc. with their HTML Entitiy counterparts e.g. <code>&amp;auml;</code> and so on.
+* HelperMethods allow you to dump the content of the CSS file right into a style tag inside the header of your HTML mail.
+
+h2. How to use it
+
+In your Mailer.delivery_xxx methods you can use
+
+<macro:code lang="ruby">
+layout    "template_filename"
+css       "css_filename"
+</macro:code>
+
+to define which layout should be used and which css file should be used to create inline styles
+
+h3. CSS inlining
+
+The cummulated style of each DOM element will be set as an style attribute when using css inlining.
+
+Example:
+
+  your css file:
+  <macro:code lang="css">
+#some-id { font-size:2em; }
+.some-class { color:red; }
+  </macro:code>
+  
+  your template:
+  <macro:code lang="html">
+<p id="some-id" class="some-class">Hello World!</p>
+  </macro:code>
+  
+  will result in the following code:
+  <macro:code lang="html">
+<p id="some-id" class="some-class" style="color:red; font-size:2em;">Hello World!</p>
+  </macro:code>
+  
+h2. Important!
+
+Be sure to follow these simple conventions or otherwise awesome_emails's magic will fail:
+
+* The layout must be located inside <code>app/views/layouts/{mailer_name}</code>
+* If you send mutlipart mails, check out the conventions on how to name your files: "http://rails.rubyonrails.com/classes/ActionMailer/Base.html":http://rails.rubyonrails.com/classes/ActionMailer/Base.html
+** So if you have these files inside of /app/views/{mailer_name}: *signup_notification.text.plain.erb*, *signup_notification.text.html.erb* ActionMailer will send a multipart mail with two parts: *text/plain* and *text/html*
+* Your CSS file must be inside of <code>/public/stylesheets</code>
+
+h2. Dependencies
+
+gems: rails 2.0.2, hpricot, csspool
+
+h2. Getting it, License and Patches
+
+Get the complete source code through "http://github.com/imedo/awesome_email":http://github.com/imedo/awesome_email. License is MIT. That means that you can do whatever you want with the software, as long as the copyright statement stays intact. Please be a kind open source citizen, and give back your patches and extensions. Just fork the code on Github, and after you're done, send us a pull request. Thanks for your help!
+
+h2. ToDo
+
+* More test coverage (as usual)
+* make it more flexible with view paths
+* rails 2.1 compatibility
+Copyright (c) 2008 imedo GmbH, released under the MIT license
