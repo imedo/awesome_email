@@ -1,3 +1,5 @@
+$KCODE = 'u'
+
 module ActionMailer
   module ConvertEntities
     # Add more if replacements you need
@@ -11,7 +13,7 @@ module ActionMailer
       # Replace all umlauts
       # Add more if replacements you need them
       def convert_to_entities(text)
-        text.gsub(/[#{UMLAUTS.keys.join}]/) { |match| UMLAUTS[match] }
+        text.gsub(/[#{UMLAUTS.keys.join}]/u) { |match| UMLAUTS[match] }
       end
       
       # Convert entities only when rendering html
