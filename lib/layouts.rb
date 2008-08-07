@@ -48,7 +48,9 @@ module ActionMailer
       
       # check if a the given view exists within the app/views folder
       def template_exists?(file_name)
-        File.exist?(File.join(RAILS_ROOT, 'app', 'views', file_name))
+        full_path = File.join(RAILS_ROOT, '**', 'views', file_name)
+        files = Dir.glob(full_path)
+        !files.blank?
       end
       
       def extend_with_mailer_name(template_name)
