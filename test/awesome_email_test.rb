@@ -1,3 +1,4 @@
+# enable UTF-8 encoding
 $KCODE = 'u'
 
 require 'test/unit'
@@ -8,6 +9,8 @@ require 'action_mailer'
 require 'action_view'
 require 'awesome_email'
 
+require 'test_helper'
+
 ActionMailer::Base.delivery_method = :test
 
 RAILS_ROOT = '/some/dir'
@@ -15,7 +18,7 @@ RAILS_ROOT = '/some/dir'
 
 #################################################################
 
-# Do some mocking, maybe use Mocha here if possible
+# Do some mocking, use Mocha here?
 class SimpleMailer < ActionMailer::Base
   
   def test
@@ -48,6 +51,7 @@ end
 
 ###############################################################
 
+# test mailer
 class MyMailer
   def render_message(method_name, body)
   end
@@ -59,7 +63,8 @@ class MyMailer
   def mailer_name
     "my_mailer"
   end
-
+  
+  # include neccessary mixins
   include ActionMailer::AdvAttrAccessor
   include ActionMailer::ConvertEntities
   include ActionMailer::InlineStyles
@@ -93,12 +98,12 @@ class AwesomeEmailTest < Test::Unit::TestCase
   end
   
   def test_should_build_correct_file_name_from_set_css
-    @mailer.css "test"
-    assert_equal "/some/dir/public/stylesheets/mails/test.css", @mailer.build_css_file_name_from_css_setting
+    @mailer.css 'test'
+    assert_equal '/some/dir/public/stylesheets/mails/test.css', @mailer.build_css_file_name_from_css_setting
   end
   
   def test_should_build_no_file_name_if_css_not_set
-    assert_equal "", @mailer.build_css_file_name_from_css_setting
+    assert_equal '', @mailer.build_css_file_name_from_css_setting
   end
   
   def test_should_not_change_html_if_no_styles_were_found
@@ -109,7 +114,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
   end
   
   def test_should_add_style_information_found_in_css_file
-    html = build_html(%Q{<h1>bla</h1>})
+    html = build_html('<h1>bla</h1>')
     result = render_inline(html)
     assert_not_nil result
     assert_not_equal html, result
@@ -117,15 +122,15 @@ class AwesomeEmailTest < Test::Unit::TestCase
   end
   
   def test_should_find_matching_rules
-    rules = find_rules(build_html('', %Q{<h1>bla</h1>}))
+    rules = find_rules(build_html('', '<h1>bla</h1>'))
     assert rules.size > 0
   end
   
   def test_should_create_css_for_h1
-    rules = find_rules(build_html(%Q{<h1>bla</h1>}))
+    rules = find_rules(build_html('<h1>bla</h1>'))
     css = @mailer.css_for_rule(rules.first)
     assert_not_nil css
-    assert_equal "font-size:140%;", css
+    assert_equal 'font-size:140%;', css
   end
   
   def test_should_cummulate_style_information
@@ -139,8 +144,8 @@ class AwesomeEmailTest < Test::Unit::TestCase
   ##########################
 
   def test_should_replace_entities
-    expected = "&auml; &Auml;"
-    result = @mailer.convert_to_entities("ä Ä")
+    expected = '&auml; &Auml;'
+    result = @mailer.convert_to_entities('ä Ä')
     assert_equal expected, result
   end
 
@@ -149,7 +154,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
   ################
 
   def test_should_extend_with_mailer_name
-    template_name = "some_mail"
+    template_name = 'some_mail'
     result = @mailer.extend_with_mailer_name(template_name)
     assert_equal "my_mailer/#{template_name}", result
   end
@@ -173,29 +178,5 @@ class AwesomeEmailTest < Test::Unit::TestCase
     SimpleMailer.deliver_test
     assert SimpleMailer.deliveries.last.body =~ /<h1>F&auml;ncy<\/h1><p>test inner content<\/p>/
   end
-  
-
-  protected
-  #######################
-  # test helper methods #
-  #######################
-
-
-  def find_rules(html)
-    css_doc = @mailer.parse_css_doc(@css)
-    html_doc = @mailer.parse_html_doc(html)
-    css_doc.find_all_rules_matching(html_doc)
-  end
-
-  def render_inline(html)
-    css_doc = @mailer.parse_css_doc(@css)
-    html_doc = @mailer.parse_html_doc(html)
-    @mailer.render_inline(css_doc, html_doc)
-  end
-
-  def build_html(content = '', head = '')
-    "<html><head>#{head}</head><body>#{content}</body></html>"
-  end
-
 
 end
