@@ -47,8 +47,11 @@ module ActionMailer
       end
       
       # check if a the given view exists within the app/views folder
+      # make sure only allowed extensions are found
       def template_exists?(file_name)
-        full_path = File.join(RAILS_ROOT, '**', 'views', file_name)
+        extensions = ActionMailer::Base.template_extensions
+        checked_file_name = file_name.split('.')[1..-1].last =~ /#{extensions.join('|')}/ ? file_name : file_name + ".{#{extensions.join(',')}}"
+        full_path = File.join(RAILS_ROOT, '**', 'views', checked_file_name)
         files = Dir.glob(full_path)
         !files.blank?
       end
