@@ -7,9 +7,9 @@ gem 'actionmailer', '2.0.2'
 gem 'actionpack', '2.0.2'
 require 'action_mailer'
 require 'action_view'
-require 'awesome_email'
+require File.dirname(__FILE__) + '/../lib/awesome_email'
 
-require 'test_helper'
+require File.dirname(__FILE__) + '/test_helper'
 
 ActionMailer::Base.delivery_method = :test
 

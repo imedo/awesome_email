@@ -5,14 +5,14 @@ module ActionMailer
     end
     
     module InstanceMethods
-      
       # render with layout, if it is set through the "layout" accessor method and a corresponding file is found 
       def render_message_with_layouts(method_name, body)
         return render_message_without_layouts(method_name, body) if @layout.blank?
         # template was set, now render with layout
         template = initialize_template_class body
-        template = render_content method_name, template
-        render_layout_template template, method_name
+        render_content method_name, template
+        method_name_with_extension = add_extension(extend_with_mailer_name(method_name))
+        render_layout_template template, method_name_with_extension
       end
       
     protected
@@ -25,7 +25,7 @@ module ActionMailer
       # builds the filename from the method_name, then renders the inner content
       def render_content_for_layout(method_name, template)
         file_name = extend_with_mailer_name(method_name)
-        template.render(:file => file_name)
+        template.render(:file => add_extension(file_name))
       end
     
       # finds the layout file and renders it, if the file is not found an exception is raised
@@ -49,11 +49,34 @@ module ActionMailer
       # check if a the given view exists within the app/views folder
       # make sure only allowed extensions are found
       def template_exists?(file_name)
+        return true if file_exists?(file_name)
+        
         extensions = ActionMailer::Base.template_extensions
-        checked_file_name = file_name.split('.')[1..-1].last =~ /#{extensions.join('|')}/ ? file_name : file_name + ".{#{extensions.join(',')}}"
-        full_path = File.join(RAILS_ROOT, '**', 'views', checked_file_name)
-        files = Dir.glob(full_path)
-        !files.blank?
+        extensions.each do |extension|
+          [content_type.gsub('/', '.'), nil].each do |middle|
+            full_name = [filename, middle, extension].compact.join('.')
+            return true if file_exists?(full_name)
+          end
+        end
+        false
+      end
+      
+      def file_exists?(filename)
+        ActionController::Base.view_paths.each do |path|
+          return true if File.exist?(File.join(path, filename))
+        end
+        false
+      end
+      
+      def add_extension(filename)
+        extensions = ActionMailer::Base.template_extensions
+        extensions.each do |extension|
+          [content_type.gsub('/', '.'), nil].each do |middle|
+            full_name = [filename, middle, extension].compact.join('.')
+            return full_name if file_exists?(full_name)
+          end
+        end
+        filename
       end
       
       def extend_with_mailer_name(template_name)
