@@ -55,7 +55,7 @@ module ActionMailer
       end
       
       def parse_css_from_file(file_name)
-        files = Dir.glob(File.join(RAILS_ROOT, '**', file_name))
+        files = Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))
         files.blank? ? '' : File.read(files[0])
       end
       
@@ -65,7 +65,7 @@ module ActionMailer
       
       def build_css_file_name(css_name)
         file_name = "#{css_name}.css"
-        Dir.glob(File.join(RAILS_ROOT, '**', file_name))[0] || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
+        Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))[0] || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
       end
     end
     

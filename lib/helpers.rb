@@ -8,7 +8,7 @@ module AwesomeEmail
       def render_css_file(file_name = 'html-mail.css')
         file_name = "#{file_name}.css" unless file_name.end_with?('.css')
         relative_path = File.join('public', 'stylesheets', 'mails', file_name)
-        files = Dir.glob(File.join(RAILS_ROOT, '**', relative_path))
+        files = Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))
         full_path = files.blank? ? File.join(RAILS_ROOT, relative_path) : files[0]
         File.read(full_path) rescue ''
       end
