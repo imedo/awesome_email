@@ -24,7 +24,7 @@ module ActionMailer
       
       # Check if the part we are rendering is html
       def html_part?(method_name)
-        method_name.gsub(".", "/") =~ /#{Mime::EXTENSION_LOOKUP['html']}/ 
+        method_name.to_s.gsub(".", "/") =~ /#{Mime::EXTENSION_LOOKUP['html']}/ 
       end
     end
     

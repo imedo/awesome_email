@@ -32,7 +32,7 @@ module ActionMailer
       # default path for all mailer layouts is layouts/mailers below app/views/
       # you can pass in another layout path as 3rd arguments
       def render_layout_template(template, method_name, layout_path = File.join('layouts', 'mailers'))
-        extension_parts = method_name.split('.')[1..-1]
+        extension_parts = method_name.to_s.split('.')[1..-1]
         while !extension_parts.blank?
           file_name = File.join(layout_path, ([@layout.to_s] + extension_parts).join('.'))
           return render_layout(file_name, template) if template_exists?(file_name)
@@ -43,7 +43,7 @@ module ActionMailer
       end
       
       def render_layout(file_name, template)
-        template.render(file_name)
+        template.render(:file => file_name)
       end
       
       # check if a the given view exists within the app/views folder
@@ -54,7 +54,7 @@ module ActionMailer
       end
       
       def extend_with_mailer_name(template_name)
-        template_name =~ /\// ? template_name : File.join(mailer_name, template_name)
+        template_name.to_s =~ /\// ? template_name : File.join(mailer_name, template_name)
       end
     end
     
