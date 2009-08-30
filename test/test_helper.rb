@@ -1,5 +1,5 @@
 # coding: utf-8
-$KCODE = 'u'
+$KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 class Test::Unit::TestCase
   
@@ -8,7 +8,7 @@ class Test::Unit::TestCase
     def find_rules(html)
       css_doc = @mailer.parse_css_doc(@css)
       html_doc = @mailer.parse_html_doc(html)
-      css_doc.find_all_rules_matching(html_doc)
+      css_doc.rule_sets
     end
     
     def render_inline(html)

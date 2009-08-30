@@ -1,5 +1,5 @@
 # coding: utf-8
-$KCODE = 'u'
+$KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 module AwesomeEmail
   module Helpers
@@ -13,7 +13,7 @@ module AwesomeEmail
         file_name = "#{file_name}.css" unless file_name.end_with?('.css')
         relative_path = File.join('public', 'stylesheets', 'mails', file_name)
         files = Dir.glob(File.join(RAILS_ROOT, '**', relative_path))
-        full_path = files.blank? ? File.join(RAILS_ROOT, relative_path) : files[0]
+        full_path = files.blank? ? File.join(RAILS_ROOT, relative_path) : files.first
         File.read(full_path) rescue ''
       end
       

@@ -1,21 +1,27 @@
 # coding: utf-8
-$KCODE = 'u'
+$KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 require 'rubygems'
+
 gem 'actionmailer', '>= 2.3.2'
 gem 'actionpack', '>= 2.3.2'
 gem 'hpricot'
 gem 'csspool'
-require 'test/unit'
+
 require 'action_mailer'
 require 'action_view'
+require 'hpricot'
+require 'csspool'
+
 require 'awesome_email'
 
+require 'test/unit'
 require 'test_helper'
 
 ActionMailer::Base.delivery_method = :test
 
 RAILS_ROOT = '/' << File.join('some', 'dir')
+CSS_TEST_FILE = File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', 'test.css')
 
 #################################################################
 
@@ -58,11 +64,11 @@ class MyMailer
   end
   
   def parse_css_from_file(file_name)
-    "h1 {font-size:140%}"
+    'h1 {font-size: 140.0% !important}'
   end
   
   def mailer_name
-    "my_mailer"
+    'my_mailer'
   end
   
   # include neccessary mixins
@@ -84,7 +90,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
-    @css = "h1 {font-size:140%}"
+    @css = 'h1 {font-size: 140.0% !important}'
     @mailer = MyMailer.new
   end
   
@@ -93,12 +99,13 @@ class AwesomeEmailTest < Test::Unit::TestCase
   #######################
   
   def test_should_build_correct_find_css_file_name
-    assert_equal "/some/dir/public/stylesheets/mails/test.css", @mailer.build_css_file_name("test")
+    
+    assert_equal CSS_TEST_FILE, @mailer.build_css_file_name("test")
   end
   
   def test_should_build_correct_file_name_from_set_css
     @mailer.css 'test'
-    assert_equal '/some/dir/public/stylesheets/mails/test.css', @mailer.build_css_file_name_from_css_setting
+    assert_equal CSS_TEST_FILE, @mailer.build_css_file_name_from_css_setting
   end
   
   def test_should_build_no_file_name_if_css_not_set
@@ -117,7 +124,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
     result = render_inline(html)
     assert_not_nil result
     assert_not_equal html, result
-    assert result =~ /<h1 style="font-size:/
+    assert result =~ /<h1 style="(.*)font-size:/
   end
   
   def test_should_find_matching_rules
@@ -129,11 +136,11 @@ class AwesomeEmailTest < Test::Unit::TestCase
     rules = find_rules(build_html('<h1>bla</h1>'))
     css = @mailer.css_for_rule(rules.first)
     assert_not_nil css
-    assert_equal 'font-size:140%;', css
+    assert_equal 'font-size: 140.0% !important;', css
   end
   
   def test_should_cummulate_style_information
-    html = build_html(%Q{<h1 id="oh-hai" class="green-thing" style="border-bottom:1px solid black">u haz a flavor</h1>})
+    html = build_html(%Q{<h1 id="oh-hai" class="green-thing" style="border-bottom: 1px solid black;">u haz a flavor</h1>})
     inlined = render_inline(html)
     assert inlined =~ /border-bottom/
   end
@@ -160,10 +167,17 @@ class AwesomeEmailTest < Test::Unit::TestCase
   
   # make sure the accessors are available
   def test_should_have_awesome_email_accessor_methods
-    assert ActionMailer::Base.instance_methods.include?('css')
-    assert ActionMailer::Base.instance_methods.include?('css=')
-    assert ActionMailer::Base.instance_methods.include?('layout')
-    assert ActionMailer::Base.instance_methods.include?('layout=')
+    if RUBY_VERSION >= '1.9'
+      assert ActionMailer::Base.instance_methods.include?(:'css')
+      assert ActionMailer::Base.instance_methods.include?(:'css=')
+      assert ActionMailer::Base.instance_methods.include?(:'layout')
+      assert ActionMailer::Base.instance_methods.include?(:'layout=')
+    else
+      assert ActionMailer::Base.instance_methods.include?('css')
+      assert ActionMailer::Base.instance_methods.include?('css=')
+      assert ActionMailer::Base.instance_methods.include?('layout')
+      assert ActionMailer::Base.instance_methods.include?('layout=')
+    end
   end
   
   # check for delivery errors

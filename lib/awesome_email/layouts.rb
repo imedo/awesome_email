@@ -1,5 +1,5 @@
 # coding: utf-8
-$KCODE = 'u'
+$KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 module ActionMailer
   module Layouts
