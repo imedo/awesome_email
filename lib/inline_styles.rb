@@ -1,5 +1,10 @@
+# coding: utf-8
+$KCODE = 'u'
+
 require 'hpricot'
 require 'csspool'
+
+include CSSPool
 
 CSS::SAC::GeneratedParser.send :include, CSS::SAC::Conditions
 

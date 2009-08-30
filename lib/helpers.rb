@@ -1,3 +1,6 @@
+# coding: utf-8
+$KCODE = 'u'
+
 module AwesomeEmail
   module Helpers
     
@@ -31,7 +34,7 @@ module AwesomeEmail
         content_type  'text/html'
       end
     end
-
+    
   end
 end
 

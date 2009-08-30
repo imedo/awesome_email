@@ -1,3 +1,6 @@
+# coding: utf-8
+$KCODE = 'u'
+
 module ActionMailer
   module Layouts
     module ClassMethods
@@ -6,7 +9,7 @@ module ActionMailer
     
     module InstanceMethods
       
-      # render with layout, if it is set through the "layout" accessor method and a corresponding file is found 
+      # render with layout, if it is set through the "layout" accessor method and a corresponding file is found
       def render_message_with_layouts(method_name, body)
         return render_message_without_layouts(method_name, body) if @layout.blank?
         # template was set, now render with layout
@@ -27,7 +30,7 @@ module ActionMailer
         file_name = extend_with_mailer_name(method_name)
         template.render(:file => file_name)
       end
-    
+      
       # finds the layout file and renders it, if the file is not found an exception is raised
       # default path for all mailer layouts is layouts/mailers below app/views/
       # you can pass in another layout path as 3rd arguments
@@ -62,7 +65,7 @@ module ActionMailer
     def self.included(receiver)
       receiver.extend ClassMethods
       receiver.send :include, InstanceMethods
-    
+      
       receiver.class_eval do
         adv_attr_accessor :layout
         alias_method_chain :render_message, :layouts

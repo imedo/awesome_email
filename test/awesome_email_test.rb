@@ -1,10 +1,12 @@
-# enable UTF-8 encoding
+# coding: utf-8
 $KCODE = 'u'
 
-require 'test/unit'
 require 'rubygems'
-gem 'actionmailer', '2.3.2'
-gem 'actionpack', '2.3.2'
+gem 'actionmailer', '>= 2.3.2'
+gem 'actionpack', '>= 2.3.2'
+gem 'hpricot'
+gem 'csspool'
+require 'test/unit'
 require 'action_mailer'
 require 'action_view'
 require 'awesome_email'
@@ -13,8 +15,7 @@ require 'test_helper'
 
 ActionMailer::Base.delivery_method = :test
 
-RAILS_ROOT = '/some/dir'
-
+RAILS_ROOT = '/' << File.join('some', 'dir')
 
 #################################################################
 
@@ -27,17 +28,17 @@ class SimpleMailer < ActionMailer::Base
   end
   
   protected 
-
+  
   def setup_multipart_mail
     headers       'Content-transfer-encoding' => '8bit'
     sent_on       Time.now
     content_type  'text/html'
   end
-
+  
   def html_part?(method_name)
     true
   end
-
+  
   def render_content_for_layout(method_name, template)
     'test inner content'
   end
@@ -55,11 +56,11 @@ end
 class MyMailer
   def render_message(method_name, body)
   end
-
+  
   def parse_css_from_file(file_name)
     "h1 {font-size:140%}"
   end
-
+  
   def mailer_name
     "my_mailer"
   end
@@ -71,9 +72,8 @@ class MyMailer
   include ActionMailer::Layouts
 end
 
-MyMailer.send(:public, *MyMailer.protected_instance_methods)  
+MyMailer.send(:public, *MyMailer.protected_instance_methods)
 MyMailer.send(:public, *MyMailer.private_instance_methods)
-
 
 ###############################################################
 
@@ -87,7 +87,6 @@ class AwesomeEmailTest < Test::Unit::TestCase
     @css = "h1 {font-size:140%}"
     @mailer = MyMailer.new
   end
-  
   
   #######################
   # inline styles tests #
@@ -118,7 +117,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
     result = render_inline(html)
     assert_not_nil result
     assert_not_equal html, result
-    assert result =~ /<h1 style="font-size:/ 
+    assert result =~ /<h1 style="font-size:/
   end
   
   def test_should_find_matching_rules
@@ -142,17 +141,17 @@ class AwesomeEmailTest < Test::Unit::TestCase
   ##########################
   # convert entities tests #
   ##########################
-
+  
   def test_should_replace_entities
     expected = '&auml; &Auml;'
     result = @mailer.convert_to_entities('ä Ä')
     assert_equal expected, result
   end
-
+  
   ################
   # layout tests #
   ################
-
+  
   def test_should_extend_with_mailer_name
     template_name = 'some_mail'
     result = @mailer.extend_with_mailer_name(template_name)
@@ -178,5 +177,5 @@ class AwesomeEmailTest < Test::Unit::TestCase
     SimpleMailer.deliver_test
     assert SimpleMailer.deliveries.last.body =~ /<h1>F&auml;ncy<\/h1><p>test inner content<\/p>/
   end
-
+  
 end
