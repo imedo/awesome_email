@@ -3,14 +3,24 @@ $KCODE = 'u'
 
 module ActionMailer
   module ConvertEntities
-    # Add more if replacements you need
-    UMLAUTS = { 'ä' => '&auml;', 'ö' => '&ouml;', 'ü' => '&uuml;', 'Ä' => '&Auml;', 'Ö' => '&Ouml;', 'Ü' => '&Uuml;', 'ß' => '&szlig;' }
     
+    # Add more if replacements you need
+    UMLAUTS = {
+        'ä' => '&auml;',
+        'ö' => '&ouml;',
+        'ü' => '&uuml;',
+        'Ä' => '&Auml;',
+        'Ö' => '&Ouml;',
+        'Ü' => '&Uuml;',
+        'ß' => '&szlig;'
+      }.freeze
+      
     module ClassMethods
       # none
     end
     
     module InstanceMethods
+      
       # Replace all umlauts
       # Add more if replacements you need them
       def convert_to_entities(text)
@@ -25,18 +35,20 @@ module ActionMailer
       
       # Check if the part we are rendering is html
       def html_part?(method_name)
-        method_name.to_s.gsub(".", "/") =~ /#{Mime::EXTENSION_LOOKUP['html']}/ 
+        method_name.to_s.gsub('.', '/') =~ /#{Mime::EXTENSION_LOOKUP['html']}/
       end
+      
     end
     
     def self.included(receiver)
-      receiver.extend ClassMethods
-      receiver.send :include, InstanceMethods
-      
       receiver.class_eval do
+        extend ClassMethods
+        include InstanceMethods
+        
         alias_method_chain :render_message, :converted_entities
       end
     end
+    
   end
 end
 

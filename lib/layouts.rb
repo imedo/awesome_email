@@ -3,6 +3,7 @@ $KCODE = 'u'
 
 module ActionMailer
   module Layouts
+    
     module ClassMethods
       # none
     end
@@ -19,6 +20,7 @@ module ActionMailer
       end
       
     protected
+      
       # tries to find a matching template and renders the inner content back to the template
       def render_content(method_name, template)
         template.instance_variable_set(:@content_for_layout, render_content_for_layout(method_name, template))
@@ -59,18 +61,20 @@ module ActionMailer
       def extend_with_mailer_name(template_name)
         template_name.to_s =~ /\// ? template_name : File.join(mailer_name, template_name)
       end
+      
     end
     
     # create "layout" method to define the layout name
     def self.included(receiver)
-      receiver.extend ClassMethods
-      receiver.send :include, InstanceMethods
-      
       receiver.class_eval do
+        extend ClassMethods
+        include InstanceMethods
+        
         adv_attr_accessor :layout
         alias_method_chain :render_message, :layouts
       end
     end
+    
   end
 end
 
