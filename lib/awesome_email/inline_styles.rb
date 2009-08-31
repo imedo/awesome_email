@@ -4,9 +4,11 @@ $KCODE = 'u' unless RUBY_VERSION >= '1.9'
 require 'rubygems'
 
 gem 'hpricot'
+gem 'nokogiri'
 gem 'csspool', '>= 2.0.0'
 
 require 'hpricot'
+require 'nokogiri'
 require 'csspool'
 
 module ActionMailer
@@ -36,12 +38,12 @@ module ActionMailer
           css_doc.rule_sets.each do |rule_set|
             inline_css = css_for_rule(rule_set)
             
-            html_doc.search(rule_set.selectors.first).each do |element|
+            html_doc.css(rule_set.selectors.first.to_s).each do |element|
               element['style'] = [inline_css, element['style']].compact.join('').strip
               element['style'] << ';' unless element['style'] =~ /;$/
             end
           end
-          html_doc.to_s
+          html_doc.to_html
         end
         
         def css_for_rule(rule_set)
@@ -51,7 +53,7 @@ module ActionMailer
         end
         
         def parse_html_doc(html)
-          html_doc = Hpricot.parse(html)
+          html_doc = Nokogiri::HTML.parse(html)
         end
         
         def parse_css_doc(file_name)

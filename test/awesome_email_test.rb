@@ -52,6 +52,14 @@ class SimpleMailer < ActionMailer::Base
   # mock rendering
   def render_layout_template(template, method_name, layout_path = File.join('layouts', 'mailers'))
     return template.render(:inline => "<html><body><h1>Fäncy</h1><p><%= yield %></p></body></html>")
+    html = %{
+      <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">
+      <html>
+      <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>
+      <body><p><%= yield %></p></body>
+      </html>
+    }
+    return template.render(:inline => html)
   end
   
 end
@@ -116,7 +124,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
     html = build_html('', '')
     result = render_inline(html)
     assert_not_nil result
-    assert_equal html, result
+    assert_equal html.gsub(/\n/, ''), result.gsub(/\n/, '')
   end
   
   def test_should_add_style_information_found_in_css_file
