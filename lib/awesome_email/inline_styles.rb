@@ -3,7 +3,7 @@ $KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 require 'rubygems'
 
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.3.3'
 gem 'csspool', '>= 2.0.0'
 
 require 'nokogiri'
