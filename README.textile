@@ -1,10 +1,12 @@
 h2. For the impatient
 
 Check out the demo application: 
-*<code>http://opensource.imedo.de/htmlmail</code>*
+
+"http://opensource.imedo.de/htmlmail":http://opensource.imedo.de/htmlmail
 
 Install the plugin: 
-*<code>script/plugin install git://github.com/imedo/awesome_email.git</code>*
+
+<pre>script/plugin install git://github.com/imedo/awesome_email.git</pre>
 
 Learn how to use it below.
 
