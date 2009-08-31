@@ -5,13 +5,9 @@ require 'rubygems'
 
 gem 'actionmailer', '>= 2.3.2'
 gem 'actionpack', '>= 2.3.2'
-gem 'hpricot'
-gem 'csspool'
 
 require 'action_mailer'
 require 'action_view'
-require 'hpricot'
-require 'csspool'
 
 require 'awesome_email'
 

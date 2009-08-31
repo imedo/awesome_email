@@ -3,16 +3,16 @@ $KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 require 'rubygems'
 
-gem 'hpricot'
 gem 'nokogiri'
 gem 'csspool', '>= 2.0.0'
 
-require 'hpricot'
 require 'nokogiri'
 require 'csspool'
 
 module ActionMailer
   module InlineStyles
+    
+    STYLE_ATTR = (RUBY_VERSION >= '1.9') ? :style : 'style'
     
     module ClassMethods
       # none
@@ -39,8 +39,8 @@ module ActionMailer
             inline_css = css_for_rule(rule_set)
             
             html_doc.css(rule_set.selectors.first.to_s).each do |element|
-              element['style'] = [inline_css, element['style']].compact.join('').strip
-              element['style'] << ';' unless element['style'] =~ /;$/
+              element[STYLE_ATTR] = [inline_css, element[STYLE_ATTR]].compact.join('').strip
+              element[STYLE_ATTR] << ';' unless element[STYLE_ATTR] =~ /;$/
             end
           end
           html_doc.to_html
