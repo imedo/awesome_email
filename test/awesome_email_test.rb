@@ -3,8 +3,8 @@ $KCODE = 'u' unless RUBY_VERSION >= '1.9'
 
 require 'rubygems'
 
-gem 'actionmailer', '>= 2.3.2'
-gem 'actionpack', '>= 2.3.2'
+gem 'actionmailer', '>= 2.0.1'
+gem 'actionpack', '>= 2.0.1'
 
 require 'action_mailer'
 require 'action_view'
