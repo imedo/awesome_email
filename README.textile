@@ -6,7 +6,7 @@ Check out the demo application:
 
 Install as plugin: 
 
-<pre>script/plugin install git://github.com/imedo/awesome_email.git</pre>
+<pre>script/plugin install git://github.com/grimen/awesome_email.git</pre>
 
 Install as gem:
 
@@ -80,7 +80,7 @@ Gems:
 
 h2. Getting it, License and Patches
 
-Get the complete source code through "http://github.com/imedo/awesome_email":http://github.com/imedo/awesome_email. License is MIT. That means that you can do whatever you want with the software, as long as the copyright statement stays intact. Please be a kind open source citizen, and give back your patches and extensions. Just fork the code on Github, and after you're done, send us a pull request. Thanks for your help!
+Get the original source code through "http://github.com/imedo/awesome_email":http://github.com/imedo/awesome_email. License is MIT. That means that you can do whatever you want with the software, as long as the copyright statement stays intact. Please be a kind open source citizen, and give back your patches and extensions. Just fork the code on Github, and after you're done, send us a pull request. Thanks for your help!
 
 h2. ToDo
 
