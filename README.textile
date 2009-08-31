@@ -4,9 +4,13 @@ Check out the demo application:
 
 "http://opensource.imedo.de/htmlmail":http://opensource.imedo.de/htmlmail
 
-Install the plugin: 
+Install as plugin: 
 
 <pre>script/plugin install git://github.com/imedo/awesome_email.git</pre>
+
+Install as gem:
+
+<pre>sudo install grimen-awesome_email</pre>
 
 Learn how to use it below.
 
