@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
@@ -7,11 +8,10 @@ SUMMARY = %Q{Rails ActionMailer with HTML layouts, inline CSS and entity substit
 HOMEPAGE = "http://github.com/grimen/#{NAME}/tree/master"
 AUTHORS = ["imedo GmbH"]
 EMAIL = "entwickler@imedo.de"
-
-require 'rubygems'
-gem 'technicalpickles-jeweler', '1.2.1'
+SUPPORT_FILES = %w(README.textile)
 
 begin
+  gem 'technicalpickles-jeweler', '>= 1.2.1'
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = NAME
@@ -22,7 +22,7 @@ begin
     gem.email = EMAIL
     
     gem.require_paths = %w{lib}
-    gem.files = %w(MIT-LICENSE README.textile Rakefile) + Dir.glob(File.join('{lib,rails,test}', '**', '*'))
+    gem.files = SUPPORT_FILES << %w(MIT-LICENSE Rakefile) << Dir.glob(File.join('{lib,rails,test}', '**', '*'))
     gem.executables = %w()
     gem.extra_rdoc_files = %w{README.textile}
   end
@@ -45,6 +45,6 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = NAME
   rdoc.options << '--line-numbers' << '--inline-source' << '--charset=UTF-8'
-  rdoc.rdoc_files.include('README.textile')
+  rdoc.rdoc_files.include(SUPPORT_FILES)
   rdoc.rdoc_files.include(File.join('lib', '**', '*.rb'))
 end
