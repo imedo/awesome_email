@@ -16,7 +16,7 @@ require 'test_helper'
 
 ActionMailer::Base.delivery_method = :test
 
-RAILS_ROOT = '/' << File.join('some', 'dir')
+RAILS_ROOT = File.join('', 'some', 'dir')
 CSS_TEST_FILE = File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', 'test.css')
 
 #################################################################
@@ -29,35 +29,35 @@ class SimpleMailer < ActionMailer::Base
     layout 'test'
   end
   
-  protected 
-  
-  def setup_multipart_mail
-    headers       'Content-transfer-encoding' => '8bit'
-    sent_on       Time.now
-    content_type  'text/html'
-  end
-  
-  def html_part?(method_name)
-    true
-  end
-  
-  def render_content_for_layout(method_name, template)
-    'test inner content'
-  end
-  
-  # mock rendering
-  def render_layout_template(template, method_name, layout_path = File.join('layouts', 'mailers'))
-    return template.render(:inline => "<html><body><h1>Fäncy</h1><p><%= yield %></p></body></html>")
-    html = %{
-      <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">
-      <html>
-      <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>
-      <body><p><%= yield %></p></body>
-      </html>
-    }
-    return template.render(:inline => html)
-  end
-  
+  protected
+    
+    def setup_multipart_mail
+      headers       'Content-transfer-encoding' => '8bit'
+      sent_on       Time.now
+      content_type  'text/html'
+    end
+    
+    def html_part?(method_name)
+      true
+    end
+    
+    def render_content_for_layout(method_name, template)
+      'test inner content'
+    end
+    
+    # mock rendering
+    def render_layout_template(template, method_name, layout_path = File.join('layouts', 'mailers'))
+      return template.render(:inline => "<html><body><h1>Fäncy</h1><p><%= yield %></p></body></html>")
+      html = %{
+        <!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">
+        <html>
+        <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head>
+        <body><p><%= yield %></p></body>
+        </html>
+      }
+      return template.render(:inline => html)
+    end
+    
 end
 
 ###############################################################
@@ -103,8 +103,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
   #######################
   
   def test_should_build_correct_find_css_file_name
-    
-    assert_equal CSS_TEST_FILE, @mailer.build_css_file_name("test")
+    assert_equal CSS_TEST_FILE, @mailer.build_css_file_name('test')
   end
   
   def test_should_build_correct_file_name_from_set_css
@@ -166,7 +165,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
   def test_should_extend_with_mailer_name
     template_name = 'some_mail'
     result = @mailer.extend_with_mailer_name(template_name)
-    assert_equal "my_mailer/#{template_name}", result
+    assert_equal File.join('my_mailer', template_name), result
   end
   
   # make sure the accessors are available
