@@ -84,6 +84,7 @@ class AwesomeEmailTest < Test::Unit::TestCase
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
+    MyMailer.initialize_csspool
     @css = "h1 {font-size:140%}"
     @mailer = MyMailer.new
   end

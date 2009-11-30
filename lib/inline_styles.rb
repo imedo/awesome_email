@@ -1,17 +1,23 @@
-require 'hpricot'
-require 'csspool'
-
-CSS::SAC::GeneratedParser.send :include, CSS::SAC::Conditions
-
 module ActionMailer
   module InlineStyles
     module ClassMethods
-      # none
+      def initialize_csspool
+        @css_pool_initialized ||= begin
+          require 'hpricot'
+          require 'csspool'
+
+          ::CSS::SAC::GeneratedParser.send :include, ::CSS::SAC::Conditions
+          
+          true
+        end
+      end
     end
     
     module InstanceMethods
       
       def inline(html)
+        self.class.initialize_csspool
+        
         css_doc = parse_css_doc(build_css_file_name_from_css_setting)
         html_doc = parse_html_doc(html)
         render_inline(css_doc, html_doc)
