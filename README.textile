@@ -1,7 +1,8 @@
 h2. For the impatient
 
 Check out the demo application: 
-*<code>http://opensource.imedo.de/htmlmail</code>*
+
+"http://opensource.imedo.de/htmlmail":http://opensource.imedo.de/htmlmail
 
 Install the plugin: 
 *<code>script/plugin install git://github.com/imedo/awesome_email.git</code>*
@@ -66,7 +67,11 @@ Be sure to follow these simple conventions or otherwise awesome_emails's magic w
 
 h2. Dependencies
 
-gems: rails 2.0.2, hpricot, csspool
+Gems:
+
+* "rails 2.0.1+":http://github.com/rails/rails
+* "nokogiri 1.3.3+":http://github.com/tenderlove/nokogiri
+* "csspool 2.0.0+":http://github.com/tenderlove/csspool
 
 h2. Getting it, License and Patches
 
@@ -74,7 +79,7 @@ Get the complete source code through "http://github.com/imedo/awesome_email":htt
 
 h2. ToDo
 
-* More test coverage (as usual)
-* make it more flexible with view paths
-* rails 2.1 compatibility
+* More test coverage (as usual) - especially testing multiple rules (!)
+* Make it more flexible with view paths
+
 Copyright (c) 2008 imedo GmbH, released under the MIT license
