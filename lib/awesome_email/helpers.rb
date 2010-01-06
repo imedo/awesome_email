@@ -45,5 +45,7 @@ end
 
 ActionView::Base.class_eval do
   include AwesomeEmail::Helpers::Views
+end
+ActionMailer::Base.class_eval do
   include AwesomeEmail::Helpers::Mailer
 end
