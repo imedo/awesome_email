@@ -57,12 +57,11 @@ module ActionMailer
       
       def parse_css_doc(file_name)
         sac = CSS::SAC::Parser.new
-        sac.parse(parse_css_from_file(file_name))
+        sac.parse(read_css_from_file(file_name))
       end
       
-      def parse_css_from_file(file_name)
-        files = Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))
-        files.blank? ? '' : File.read(files[0])
+      def read_css_from_file(file_name)
+        File.exists?(file_name) ? File.read(file_name) : ''
       end
       
       def build_css_file_name_from_css_setting
@@ -70,8 +69,14 @@ module ActionMailer
       end
       
       def build_css_file_name(css_name)
-        file_name = "#{css_name}.css"
-        Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))[0] || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
+        file_name = css_name =~ /\.css$/ ? css_name : "#{css_name}.css"
+        full_path_to_file = Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))[0] || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
+        #Lets try to find the file in case it isn't in the public/stylesheets directory
+        unless File.exists?(full_path_to_file)
+          full_path_to_file = (File.join(RAILS_ROOT, 'public', file_name))
+        end
+
+        full_path_to_file
       end
     end
     
