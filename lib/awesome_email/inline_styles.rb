@@ -35,12 +35,15 @@ module ActionMailer
       protected
         
         def render_inline(css_doc, html_doc)
+          
           css_doc.rule_sets.each do |rule_set|
             inline_css = css_for_rule(rule_set)
-            
-            html_doc.css(rule_set.selectors.first.to_s).each do |element|
-              element[STYLE_ATTR] = [inline_css, element[STYLE_ATTR]].compact.join('').strip
-              element[STYLE_ATTR] << ';' unless element[STYLE_ATTR] =~ /;$/
+            #Nokogiri libs cant do a:.* selectors
+            rule_set.selectors.collect(&:to_s).reject{|i| i =~ /^a:.+/}.each do |selector|
+              html_doc.css(selector).each do |element|
+                element[STYLE_ATTR] = [inline_css, element[STYLE_ATTR]].compact.join('').strip
+                element[STYLE_ATTR] << ';' unless element[STYLE_ATTR] =~ /;$/
+              end
             end
           end
           html_doc.to_html
@@ -57,12 +60,11 @@ module ActionMailer
         end
         
         def parse_css_doc(file_name)
-          css_doc = CSSPool.CSS(parse_css_from_file(file_name))
+          css_doc = CSSPool.CSS(read_css_from_file(file_name))
         end
         
-        def parse_css_from_file(file_name)
-          files = Dir.glob(File.join(RAILS_ROOT, '**', file_name))
-          files.blank? ? '' : File.read(files.first)
+        def read_css_from_file(file_name)
+          File.exists?(file_name) ? File.read(file_name) : ''
         end
         
         def build_css_file_name_from_css_setting
@@ -70,8 +72,14 @@ module ActionMailer
         end
         
         def build_css_file_name(css_name)
-          file_name = "#{css_name}.css"
-          Dir.glob(File.join(RAILS_ROOT, '**', file_name)).first || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
+          file_name = css_name =~ /\.css$/ ? css_name : "#{css_name}.css"
+          full_path_to_file = Dir.glob(File.join(RAILS_ROOT, 'public', 'stylesheets', '**', file_name))[0] || File.join(RAILS_ROOT, 'public', 'stylesheets', 'mails', file_name)
+          #Lets try to find the file in case it isn't in the public/stylesheets directory
+          unless File.exists?(full_path_to_file)
+            full_path_to_file = (File.join(RAILS_ROOT, 'public', file_name))
+          end
+
+          full_path_to_file
         end
         
     end
